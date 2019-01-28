@@ -1,79 +1,23 @@
-// Glediator Arduino UNO sketch by Jens Andrée
-// 500k bauds with 80 pixels no problem
-// sdcard stream for stand-alone operation.
-
 #include <FastLED.h>
-//#include <SPI.h>
-//#include <SD.h>
 
-#define NUM_LEDS 150
-#define DATA_PIN 6
-#define CMD_NEW_DATA 1
-#define BAUD_RATE 500000  //if using Glediator via serial
+#define NUM_LEDS 150      // количество светодиодов в гирлянде
+#define DATA_PIN 6        // пин, к которому подключен сигнальный вход гирлянды
 
-//File fxdata;
-CRGB leds[NUM_LEDS];
+CRGB leds[NUM_LEDS];      // массив трехбайтовых цветов для передачи в гирлянду
 
 void setup()
 {
-  //FastLED.addLeds<WS2801, DATA_PIN, CLOCK_PIN, RGB>(leds, NUM_LEDS); //se doc for different LED strips
+  // Инициализация библиотеки FastLED
   FastLED.addLeds<NEOPIXEL, DATA_PIN>(leds, NUM_LEDS);
-  Serial.begin(BAUD_RATE); // when using Glediator via usb
-//  Serial.begin(115200);
-  
-  for(int y = 0 ; y < NUM_LEDS ; y++) 
-  {
-    leds[y] = CRGB::White; // set all leds to black during setup
-  }
-  FastLED.show();
-
-//  pinMode(10, OUTPUT); // CS/SS pin as output for SD library to work.
-//  digitalWrite(10, HIGH); // workaround for sdcard failed error...
-
-//  if (!SD.begin(4))
-//  {
-//    Serial.println("sdcard initialization failed!");
-//    return;
-//  }
-//  Serial.println("sdcard initialization done.");
-  
-  // test file open
-//  fxdata = SD.open("myanim.dat");  // read only
-//  if (fxdata)
-//  {
-//    Serial.println("file open ok");      
-//    fxdata.close();
-//  }
-}
-
-int serialGlediator()
-{
-  while (!Serial.available()) {}
-  return Serial.read();
 }
 
 void loop()
 {
-
-// uncomment for Glediator  
-  while (serialGlediator() != CMD_NEW_DATA) {}
-  Serial.readBytes((char*)leds, NUM_LEDS*3);
-  FastLED.show();
-  delay(50); // set the speed of the animation. 20 is appx ~ 500k bauds
-
-//  fxdata = SD.open("myanim.dat");  // read only
-//  if (fxdata)
-//   {
-//      Serial.println("file open ok");      
-//    }
-
-//  while (fxdata.available()) 
-//  {
-//    fxdata.readBytes((char*)leds, NUM_LEDS*3);
-//    FastLED.show();
-//    delay(50); // set the speed of the animation. 20 is appx ~ 500k bauds
-//  }
-  
-  // close the file in order to prevent hanging IO or similar throughout time
-//  fxdata.close();
+  for(int y = 0 ; y < NUM_LEDS ; y++) 
+  {
+    leds[y] = CRGB::White;  // устанавливаем белый цвет
+    FastLED.show();         // включаем отображение
+    delay(200);
+  }
+  delay(10000);
 }
